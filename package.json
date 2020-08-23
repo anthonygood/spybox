@@ -1,0 +1,11 @@
+{
+  "name": "spybox",
+  "version": "1.0.0",
+  "description": "A debugging utility for tracing object access.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Anthony Good",
+  "license": "ISC"
+}
