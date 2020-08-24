@@ -127,8 +127,19 @@ describe('SpyBox', () => {
         2: {
           __reads: 2,
         },
+        '[constructor]': {
+          __reads: 1,
+        }
       }
     })
+  })
+
+  it("doesn't crash when doing stuff with constructor function", () => {
+    expect(() => {
+      const root = SpyBox({ a: {} })
+      String(root.a.constructor)
+      String(root.a.constructor)
+    }).not.toThrowError()
   })
 
   describe('with bottomless box', () => {

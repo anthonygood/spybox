@@ -13,6 +13,8 @@ const BottomlessBox = (name = 'BottomlessBox', { boobyTraps = [] } = {}) =>
 
 const registerKey = Symbol('register')
 
+const sanitizePropertyName = prop => prop === 'constructor' ? '[constructor]' : prop.toString()
+
 const SpyBox = (target, register = {}, countReads = true) => {
   const handler = {
     get(target, prop) {
@@ -20,12 +22,13 @@ const SpyBox = (target, register = {}, countReads = true) => {
       if (prop === Symbol.species) return target[prop]
 
       const value = Reflect.get(target, prop)
-      const registered = register[prop]
+      const sanitizedProp = sanitizePropertyName(prop)
+      const registered = register[sanitizedProp]
 
       if (typeof value === 'object' || typeof value === 'function') {
         if (!registered) {
           const spy = SpyBox(value, countReads ? { __reads: 1 } : {}, countReads)
-          register[prop] = spy[registerKey]
+          register[sanitizedProp] = spy[registerKey]
           return spy
         }
 
@@ -35,11 +38,11 @@ const SpyBox = (target, register = {}, countReads = true) => {
       }
 
       if (typeof registered === 'undefined') {
-        register[prop] = 1
+        register[sanitizedProp] = 1
       }
 
       if (typeof registered === 'number') {
-        register[prop]++
+        register[sanitizedProp]++
       }
 
       return value
