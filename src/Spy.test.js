@@ -71,4 +71,10 @@ describe('Spy', () => {
       }
     })
   })
+
+  it('can be stringified', () => {
+    const spy = Spy()
+    const stringified = JSON.stringify(spy)
+    expect(stringified).toBe('"toJSON(BottomlessBox)"')
+  })
 })
