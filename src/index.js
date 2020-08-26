@@ -1,1 +1,1 @@
-module.exports = require('./SpyBox')
+module.exports = require('./Spy')

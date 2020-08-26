@@ -1,16 +1,3 @@
-const BottomlessBox = (name = 'BottomlessBox', { boobyTraps = [] } = {}) =>
-  new Proxy(function() {}, {
-    get(_target, prop, _handler) {
-      if (prop === Symbol.toPrimitive) return () => `Symbol.toPrimitive(${name})`
-      const path = `${name}.${prop.toString()}`
-      if (boobyTraps.includes(path)) throw new Error(`Trap sprung for ${path}`)
-      return BottomlessBox(path, { boobyTraps })
-    },
-    apply(_target, _thisArg, _args) {
-      return BottomlessBox(`${name}()`, { boobyTraps })
-    }
-  })
-
 const registerKey = Symbol('register')
 
 const sanitizePropertyName = prop => prop === 'constructor' ? '[constructor]' : prop.toString()
@@ -62,14 +49,11 @@ const SpyBox = (target, register = {}, countReads = true) => {
   return new Proxy(target, handler)
 }
 
-const Spy = (name, config) => SpyBox(BottomlessBox(name, config), {}, false)
 const inspect = spy => spy[registerKey]
 const debug = spy => JSON.stringify(inspect(spy), null, 2)
 
 module.exports = {
-  Spy,
   SpyBox,
-  BottomlessBox,
   inspect,
   debug,
 }
